@@ -27,7 +27,7 @@ app.use(cookieParser());
 // ===== Session =====
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "227f3e1318f74e461dc25a412321042d00fb4afa5ad00759aa7ef008d0c8579bfe6f0f2fa301906ef7eb82aae8975d330868c470f44e9b721dceebff7662ab", // ✅ .env me rakho
+    secret: process.env.SESSION_SECRET || "supersecretkey", // ✅ .env me rakho
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
