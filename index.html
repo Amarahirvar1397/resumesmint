@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>resumesmint - Build Your Resume Smarter</title>
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Theme System - Load immediately to prevent flash -->
+  <script src="theme-system.js"></script>
+</head>
+<body>
+  <!-- ========== AUTH MODAL (Login/Signup) ========== -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <h2>Welcome to resumesmint</h2>
+
+      <!-- Signup Form -->
+      <form id="signupForm">
+        <h3>Signup</h3>
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Sign Up</button>
+        <p style="font-size: 12px; color: #28a745; margin-top: 10px;">
+          📧 Email OTP verification enabled
+        </p>
+      </form>
+
+      <!-- OTP Verify Form -->
+      <form id="otpForm" style="display:none; margin-top:15px;">
+        <h3>Verify OTP</h3>
+        <p id="otpEmailDisplay" style="margin: 10px 0; color: #666; font-size: 14px;">
+          📧 OTP sent to: <strong id="otpEmailText"></strong>
+        </p>
+        <input type="hidden" name="email" id="otpEmailHidden" />
+        <input type="text" name="otp" placeholder="Enter OTP from your email" required />
+        <button type="submit">Verify OTP</button>
+      </form>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <h3>Login</h3>
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+        <p style="text-align: center; margin-top: 10px;">
+          <a href="#" id="forgotPasswordLink" style="color: #007bff; text-decoration: none; font-size: 14px;">
+            🔑 Forgot Password?
+          </a>
+        </p>
+      </form>
+
+      <!-- Forgot Password Form -->
+      <form id="forgotPasswordForm" style="display:none; margin-top:15px;">
+        <h3>Reset Password</h3>
+        <input type="email" name="email" placeholder="Enter your email" required />
+        <button type="submit">Send Reset OTP</button>
+        <p style="text-align: center; margin-top: 10px;">
+          <a href="#" id="backToLoginLink" style="color: #007bff; text-decoration: none; font-size: 14px;">
+            ← Back to Login
+          </a>
+        </p>
+      </form>
+
+      <!-- Password Reset OTP Form -->
+      <form id="resetOtpForm" style="display:none; margin-top:15px;">
+        <h3>Verify Reset OTP</h3>
+        <p id="resetEmailDisplay" style="margin: 10px 0; color: #666; font-size: 14px;">
+          📧 Reset OTP sent to: <strong id="resetEmailText"></strong>
+        </p>
+        <input type="hidden" name="email" id="resetEmailHidden" />
+        <input type="text" name="otp" placeholder="Enter OTP from your email" required />
+        <input type="password" name="newPassword" placeholder="New Password" required />
+        <input type="password" name="confirmPassword" placeholder="Confirm New Password" required />
+        <button type="submit">Reset Password</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========== MAIN SITE CONTENT (LOCKED until login/signup) ========== -->
+  <div id="siteContent" style="display:none;">
+    <!-- ========== HEADER ========== -->
+    <header>
+      <div class="logo">
+        <a href="index.html">
+          <img src="assets/logo.svg" alt="resumesmint" />
+        </a>
+      </div>
+      <nav class="nav">
+        <a href="create.html">Create Resume</a>
+        <a href="jobs.html">Find Jobs</a>
+        <a href="interview.html">AI Interview</a>
+      </nav>
+
+      <div class="header-actions">
+        <!-- User welcome message -->
+        <div id="userWelcome" class="user-welcome" style="display: none;">
+          <span>👋 Welcome, </span>
+          <strong id="userDisplayName">User</strong>
+        </div>
+        <!-- Theme toggle -->
+        <button id="theme-toggle" class="theme-btn">🌙</button>
+        <!-- Logout button -->
+        <button id="logoutBtn" class="logout-btn">🚪 Logout</button>
+      </div>
+    </header>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section class="hero">
+      <h1>Create Your <span>Professional Resume</span> in Minutes</h1>
+      <p>Choose a template, fill your details, and get your job-ready resume instantly.</p>
+      <a href="create.html" class="cta-btn">Start Building →</a>
+    </section>
+
+    <!-- ========== TEMPLATE PREVIEW SCROLLER ========== -->
+    <section class="templates-scroller">
+      <h2 style="text-align:center; margin-bottom:1rem;">Choose Your Resume Template</h2>
+      <div class="template-scroll-container" id="templateScroll">
+        <!-- JS se 5 templates auto-generate honge -->
+      </div>
+    </section>
+
+    <!-- ========== AI INTERVIEW SECTION ========== -->
+    <section class="hero" style="background: linear-gradient(135deg, #ff512f, #dd2476); margin-top:2rem;">
+      <h1>Prepare Smarter with <span>AI Mock Interviews</span></h1>
+      <p>Practice common interview questions and get instant feedback with AI assistance.</p>
+      <a href="interview.html" class="cta-btn">Start Interview Prep →</a>
+    </section>
+
+    <!-- ========== JOB FINDER SECTION ========== -->
+    <section class="hero" style="background: linear-gradient(135deg, #00b09b, #96c93d); margin-top: 2rem;">
+      <h1>Discover Your <span>Next Job Opportunity</span></h1>
+      <p>Browse thousands of job listings tailored to your skills and preferences using our smart search.</p>
+      <a href="jobs.html" class="cta-btn">Find Jobs Now →</a>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer>
+      <div class="footer-links">
+        <!-- About -->
+        <div>
+          <h3>About</h3>
+          <p>resumesmint helps students and professionals create job-ready resumes quickly with customizable templates and AI interview preparation tools.</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="create.html">Create Resume</a></li>
+            <li><a href="jobs.html">Find Jobs</a></li>
+            <li><a href="interview.html">AI Interview</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal & Policies -->
+        <div>
+          <h3>Legal & Policies</h3>
+          <ul>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="cookies.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+        <!-- Social Media -->
+        <div>
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="https://www.linkedin.com/in/amar-ahirwar-29098b326/">LinkedIn</a></li>
+            <li><a href="https://www.facebook.com/profile.php?id=100046095455382">Facebook</a></li>
+            <li><a href="ahirwaramar685@gmail.com">Email Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="credit">
+        © 2025 resumesmint. Crafted with ❤️ by <strong>Amar Ahirvar</strong>.
+      </p>
+    </footer>
+  </div>
+
+  <!-- External Script -->
+  <script src="script.js"></script>
+</body>
+</html> 
