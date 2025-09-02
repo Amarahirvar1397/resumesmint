@@ -1,0 +1,96 @@
+:root {
+  --main-color: #0077b5; /* default template color */
+  --border-color: #ccc;  /* default border color for h2 */
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+  color: #333;
+  line-height: 1.5;
+  padding: 20px;
+}
+
+.resume {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin: 5px 0;
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-top: 25px;
+  border-bottom: 1px solid var(--main-color); /* dynamic border color */
+  padding-bottom: 5px;
+  color: var(--main-color); /* dynamic color for heading */
+}
+
+p {
+  margin: 5px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--main-color); /* dynamic color for links */
+  text-decoration: underline;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.4;
+}
+.resume {
+  page-break-inside: avoid;
+}
+
+section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .resume {
+    margin: 20px 10px;
+    padding: 0;
+  }
+  
+  header {
+    padding: 20px 15px;
+  }
+  
+  header img {
+    width: 100px;
+    height: 100px;
+  }
+  
+  h1 {
+    font-size: 24px;
+  }
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact; /* colors sahi aayenge */
+    print-color-adjust: exact;
+  }
+}

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fill Resume Details - resumesmint</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Theme System - Load immediately to prevent flash -->
+  <script src="theme-system.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #2b6cb0;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .theme-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background-color 0.3s;
+    }
+
+    .theme-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background-color: #111827;
+      color: #f9fafb;
+    }
+
+    body.dark-mode header {
+      background: #1f2937;
+    }
+
+    body.dark-mode .form-section {
+      background: #374151;
+      color: #f9fafb;
+    }
+
+    body.dark-mode .form-section input,
+    body.dark-mode .form-section textarea {
+      background: #1f2937;
+      border-color: #4b5563;
+      color: #f9fafb;
+    }
+
+    body.dark-mode .preview-section {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    body.dark-mode footer {
+      background: #1f2937;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .form-section {
+      flex: 1;
+      max-width: 40%;
+      background: #f7f7f7;
+      padding: 20px;
+      border-radius: 10px;
+      overflow-y: auto;
+    }
+
+    .form-section h2 {
+      margin-bottom: 15px;
+      color: #2b6cb0;
+      font-size: 1.5rem;
+    }
+
+    .form-section label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-section input,
+    .form-section textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .form-section textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .preview-section {
+      flex: 2;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      overflow: auto;
+      padding: 10px;
+      position: relative;
+    }
+
+    .preview-header {
+      background: #f8f9fa;
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+      border-radius: 10px 10px 0 0;
+      margin: -10px -10px 10px -10px;
+      font-weight: bold;
+      color: #2b6cb0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+      min-height: 600px;
+    }
+
+    .controls-section {
+      background: #f7f7f7;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .controls-section label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .controls-section input[type="color"] {
+      width: 60px;
+      height: 40px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    #downloadBtn {
+      background: #2b6cb0;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    #downloadBtn:hover {
+      background: #1e4a73;
+    }
+
+    footer {
+      background: #2b6cb0;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .nav a {
+        margin-left: 10px;
+        font-size: 14px;
+      }
+
+      main {
+        flex-direction: column;
+        padding: 15px;
+        gap: 15px;
+      }
+
+      .form-section {
+        max-width: 100%;
+        order: 1;
+      }
+
+      .form-section h2 {
+        font-size: 1.3rem;
+        text-align: center;
+        background: #2b6cb0;
+        color: white;
+        padding: 10px;
+        margin: -20px -20px 20px -20px;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .preview-section {
+        order: 2;
+        min-height: 400px;
+      }
+
+      .preview-header {
+        text-align: center;
+        font-size: 1.1rem;
+      }
+
+      iframe {
+        min-height: 400px;
+      }
+
+      .controls-section {
+        order: 3;
+        margin-top: 0;
+      }
+
+      .form-section input,
+      .form-section textarea {
+        padding: 15px;
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 8px 10px;
+      }
+
+      header h1 {
+        font-size: 1.3rem;
+      }
+
+      main {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .form-section,
+      .preview-section,
+      .controls-section {
+        padding: 15px;
+      }
+
+      .form-section h2 {
+        font-size: 1.2rem;
+        padding: 8px;
+      }
+
+      iframe {
+        min-height: 350px;
+      }
+
+      #downloadBtn {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <a href="index.html">
+        <h1 style="color:white; margin:0;">resumesmint</h1>
+      </a>
+    </div>
+    
+    <nav class="nav">
+      <a href="index.html" style="color:white;">Home</a>
+      <a href="select.html" style="color:white;">Back</a>
+    </nav>
+    
+    <div class="header-actions">
+      <!-- Theme toggle -->
+      <button id="theme-toggle" class="theme-btn">🌙</button>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main>
+    <!-- Left Form -->
+    <div class="form-section">
+      <h2>Fill Resume Details</h2>
+      <form id="resumeForm">
+        <label>Photo</label>
+        <input type="file" id="photo" accept="image/*" />
+
+        <label>Full Name</label>
+        <input type="text" id="name" />
+
+      
+
+        <label>Email</label>
+        <input type="email" id="email" />
+
+
+        
+        <label>Phone</label>
+        <input type="text" id="phone" />
+
+        <label>LinkedIn</label>
+<input type="url" id="linkedin" placeholder="https://www.linkedin.com/in/username" />
+
+
+        <label>Address</label>
+        <textarea id="address"></textarea>
+
+        <label>Postal Code</label>
+        <input type="text" id="postal" />
+
+        <label>Date of Birth</label>
+        <input type="date" id="dob" />
+
+        <label>Nationality</label>
+        <input type="text" id="nationality" />
+
+        <label>Skills</label>
+        <textarea id="skills"></textarea>
+
+        <label>Education</label>
+        <textarea id="education"></textarea>
+
+        <label>Experience</label>
+        <textarea id="experience"></textarea>
+
+        <label>Languages</label>
+        <textarea id="languages"></textarea>
+
+        <label>Hobbies</label>
+        <textarea id="hobbies"></textarea>
+
+       <label for="summary">Summary</label>
+  <textarea id="summary" placeholder="Write your career summary here..."></textarea>
+      </form>
+    </div>
+    
+
+
+    <!-- Right Preview -->
+    <div class="preview-section">
+      <div class="preview-header">📄 Live Preview</div>
+      <!-- Resume Preview Iframe -->
+      <iframe id="previewFrame" src="templates/template-01.html"></iframe>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls-section">
+      <label>Choose Template Color</label>
+      <input type="color" id="templateColor" value="#2b6cb0" />
+      
+      <button id="downloadBtn">📥 Download as PDF</button>
+    </div>
+
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 resumesmint. Crafted by Amar Ahirvar.</p>
+  </foot>
+<script src="libs/html2pdf.bundle.min.js"></script>
+
+<script src="fill.js"></script>   
+
+</body>
+</html>

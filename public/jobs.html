@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Finder - resumesmint</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Theme System - Load immediately to prevent flash -->
+  <script src="theme-system.js"></script>
+  <style>
+    /* Reset & base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #111827;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      max-width: 100%;
+      width: 100%;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .header-content {
+      text-align: left;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .theme-btn {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+    }
+    
+    .theme-btn:hover {
+      background: #e5e7eb;
+    }
+    
+    .home-btn {
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    .home-btn:hover {
+      background: #1e40af;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 2.75rem;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+    header p {
+      font-weight: 500;
+      color: #4b5563;
+      font-size: 1.125rem;
+    }
+    main {
+      width: 100%;
+      max-width: 700px;
+    }
+    /* Form */
+    #job-form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    #job-form input[type="text"] {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      transition: border-color 0.3s;
+    }
+    #job-form input[type="text"]:focus {
+      border-color: #2563eb;
+      outline: none;
+      box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+    }
+    #job-form button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #job-form button:hover {
+      background-color: #1e40af;
+    }
+    /* Job results list */
+    #job-results {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    #job-results li {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: box-shadow 0.2s ease;
+    }
+    #job-results li:hover {
+      box-shadow: 0 6px 12px rgb(0 0 0 / 0.1);
+    }
+    #job-results li a.job-link {
+      font-weight: 600;
+      font-size: 1.125rem;
+      color: #1e40af;
+      text-decoration: none;
+      flex-grow: 1;
+      margin-right: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #job-results li a.job-link:hover {
+      text-decoration: underline;
+    }
+    #job-results li .company {
+      color: #6b7280;
+      font-size: 0.95rem;
+      margin-right: 20px;
+      white-space: nowrap;
+    }
+    #job-results li button.apply-btn {
+      background-color: #2563eb;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      flex-shrink: 0;
+    }
+    #job-results li button.apply-btn:hover {
+      background-color: #1e40af;
+    }
+    /* Loading, no result, error */
+    #job-results li.loading,
+    #job-results li.no-results,
+    #job-results li.error {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      color: #6b7280;
+      font-style: italic;
+      text-align: center;
+      cursor: default;
+      padding: 20px 0;
+    }
+    #job-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+#job-form input,
+#job-form select {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+#job-form input:focus,
+#job-form select:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+}
+#job-form button {
+  grid-column: span 1;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  align-self: center;
+}
+#job-form button:hover {
+  background-color: #1e40af;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+body.dark-mode header {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+body.dark-mode .theme-btn {
+  background: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+body.dark-mode .theme-btn:hover {
+  background: #4b5563;
+}
+
+body.dark-mode #job-results li {
+  background: #1f2937;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+body.dark-mode #job-results li a.job-link {
+  color: #60a5fa;
+}
+
+body.dark-mode #job-results li .company {
+  color: #9ca3af;
+}
+
+body.dark-mode #job-form input,
+body.dark-mode #job-form select {
+  background: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+body.dark-mode #job-form input:focus,
+body.dark-mode #job-form select:focus {
+  border-color: #60a5fa;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>Find Your Dream Job</h1>
+      <p>Search jobs based on your skills and experience</p>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="theme-btn">🌙</button>
+      <a href="index.html" class="home-btn">🏠 Home</a>
+    </div>
+  </header>
+  <main>
+   <form id="job-form">
+  <input
+    type="text"
+    name="skills"
+    placeholder="Enter skills e.g. React, Node.js"
+    required
+    autocomplete="off"
+  />
+
+  <select name="experience" required>
+    <option value="" disabled selected>Experience Level</option>
+    <option value="entry">Entry Level</option>
+    <option value="mid">Mid Level</option>
+    <option value="senior">Senior Level</option>
+  </select>
+
+  <input
+    type="text"
+    name="location"
+    placeholder="Location (optional)"
+    autocomplete="off"
+  />
+
+  <select name="job_type" required>
+    <option value="" disabled selected>Job Type</option>
+    <option value="fulltime">Full-time</option>
+    <option value="parttime">Part-time</option>
+    <option value="contract">Contract</option>
+    <option value="internship">Internship</option>
+  </select>
+
+  <input
+    type="number"
+    name="salary_min"
+    placeholder="Min Salary ($, optional)"
+    min="0"
+  />
+
+  <input
+    type="number"
+    name="salary_max"
+    placeholder="Max Salary ($, optional)"
+    min="0"
+  />
+
+  <select name="industry" required>
+    <option value="" disabled selected>Industry</option>
+    <option value="tech">Technology</option>
+    <option value="finance">Finance</option>
+    <option value="healthcare">Healthcare</option>
+    <option value="education">Education</option>
+    <option value="marketing">Marketing</option>
+    <!-- Add more industries as needed -->
+  </select>
+
+  <button type="submit">Search</button>
+</form>
+
+    <ul id="job-results"></ul>
+  </main>
+  <script src="jobs.js" defer></script>
+</body>
+</html>

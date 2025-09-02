@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Coach - resumesmint</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="interview.css">
+  <!-- Theme System - Load immediately to prevent flash -->
+  <script src="theme-system.js"></script>
+  <script defer src="interview.js"></script>
+</head>
+<body>
+  <header class="interview-header">
+    <div class="header-content">
+      <h1>🤖 AI Interview Coach</h1>
+      <p>Practice with a realistic AI interviewer</p>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="theme-btn">🌙</button>
+      <a href="index.html" class="home-btn">🏠 Home</a>
+    </div>
+  </header>
+
+  <main class="interview-container">
+    <!-- AI Interviewer Avatar -->
+    <div class="ai-avatar">
+      <img id="ai-girl" src="assets/avatar-idle.png" alt="AI Interviewer">
+      <div class="voice-indicator" id="voiceIndicator"></div>
+    </div>
+
+    <!-- Question + Button -->
+    <div class="question-box" id="question">Click "Start Interview" to begin</div>
+    <button id="start-interview" class="start-btn">🚀 Start Interview</button>
+    
+    <div id="rating" class="rating-box"></div>
+  </main>
+
+  <footer class="interview-footer">
+    <p>💡 Tip: Speak clearly into your microphone for best results</p>
+  </footer>
+</body>
+</html>

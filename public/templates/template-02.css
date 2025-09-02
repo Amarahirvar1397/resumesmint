@@ -1,0 +1,112 @@
+:root {
+  --main-color: #e63946; /* default template color */
+}
+
+body {
+  font-family: 'Verdana', sans-serif;
+  margin:0;
+  background: #f0f2f5;
+}
+
+.resume {
+  display:flex;
+  height:100vh;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+  max-width: 1000px;
+  margin: 40px auto;
+}
+
+aside {
+  width:30%;
+  background: var(--main-color); /* dynamic color */
+  color:white;
+  padding:20px;
+  text-align:center;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+aside img {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  margin-bottom:15px;
+  border:3px solid white;
+  object-fit: cover;
+}
+
+aside a {
+  color: white;
+  margin: 10px 0 20px;
+  text-decoration: underline;
+  font-weight: 600;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.4;
+}
+
+main {
+  flex:1;
+  padding:30px;
+  background:#fff;
+  overflow-y:auto;
+}
+
+h2 {
+  color: var(--main-color); /* dynamic color */
+  border-left:4px solid var(--main-color); /* dynamic color */
+  padding-left:10px;
+  margin-top:20px;
+}
+.resume {
+  page-break-inside: avoid;
+}
+
+section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Fix text wrapping for all content */
+p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .resume {
+    flex-direction: column;
+    height: auto;
+    margin: 20px 10px;
+  }
+  
+  aside {
+    width: 100%;
+    padding: 20px 15px;
+  }
+  
+  main {
+    padding: 20px 15px;
+  }
+  
+  aside img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact; /* colors sahi aayenge */
+    print-color-adjust: exact;
+  }
+}

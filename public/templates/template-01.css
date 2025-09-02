@@ -1,0 +1,118 @@
+
+:root {
+  --main-color: #2b6cb0; /* default template color */
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background:#f9f9f9;
+  margin:0;
+}
+
+.resume {
+  max-width:850px;
+  margin:auto;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  overflow:hidden;
+  padding-bottom: 30px;
+}
+
+header {
+  background: var(--main-color); /* dynamic color */
+  color:white;
+  text-align:center;
+  padding:25px;
+}
+
+header img {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  margin-bottom:10px;
+  border:4px solid white;
+}
+
+header a {
+  color: white;
+  text-decoration: underline;
+  font-weight: 600;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.4;
+}
+
+section {
+  padding:20px 40px;
+}
+
+/* Fix text wrapping for all content */
+section p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+/* Specific fixes for header contact info */
+header p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+  margin: 5px 0;
+}
+
+/* Mobile responsive adjustments for resume template */
+@media (max-width: 768px) {
+  .resume {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  section {
+    padding: 15px 20px;
+  }
+  
+  header {
+    padding: 20px 15px;
+  }
+  
+  header img {
+    width: 100px;
+    height: 100px;
+  }
+  
+  header h1 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+  }
+  
+  header p {
+    font-size: 14px;
+    margin: 8px 0;
+  }
+}
+
+h2 {
+  color: var(--main-color); /* dynamic color */
+  border-bottom:2px solid var(--main-color); /* dynamic color */
+  padding-bottom:5px;
+  margin-top:20px;
+}
+.resume {
+  page-break-inside: avoid;
+}
+
+section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact; /* colors sahi aayenge */
+    print-color-adjust: exact;
+  }
+}
