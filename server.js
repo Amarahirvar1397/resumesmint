@@ -36,7 +36,7 @@ app.use(
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 din
-      secure: false, // agar https enable ho to true karna
+      secure: false, // agar https enable ho 
       httpOnly: true,
     },
   })
