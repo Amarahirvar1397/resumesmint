@@ -25,15 +25,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ===== Session =====
-app.use(session({
-  secret: process.env.SESSION_SECRET || "supersecretkey",
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // ✅ Set true if using HTTPS
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "227f3e1318f74e461dc25a412321042d00fb4afa5ad00759aa7ef008d0c8579bfe6f0f2fa301906ef7eb82aae8975d330868c470f44e9b721dceebff7662ab", // ✅ .env me rakho
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI, // ✅ Render ya Atlas ka URI
+      collectionName: "sessions",
+    }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 din
+      secure: false, // agar https enable ho to true karna
+      httpOnly: true,
+    },
+  })
+);
 
 // ===== MongoDB connection =====
-mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/resumifyx")
+mongoose.connect(process.env.MONGO_URI || "mongodb+srv://ahirwaramar685:Mom1977@cluster0.iblxmai.mongodb.net/project0?retryWrites=true&w=majority&appName=Cluster0")
 .then(() => console.log("✅ MongoDB connected"))
 .catch(err => {
   console.error("❌ DB connection error:", err);
