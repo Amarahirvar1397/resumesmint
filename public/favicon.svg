@@ -1,0 +1,78 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Vibrant gradient background -->
+    <radialGradient id="bgGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#4ecdc4;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#45b7d1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96ceb4;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Paper gradient -->
+    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#f0f9ff;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Dynamic background -->
+  <circle cx="16" cy="16" r="16" fill="url(#bgGradient)"/>
+  
+  <!-- Floating particles -->
+  <circle cx="6" cy="8" r="1" fill="#ffffff" opacity="0.6">
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="26" cy="12" r="0.8" fill="#ffffff" opacity="0.4">
+    <animate attributeName="opacity" values="0.2;0.7;0.2" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="8" cy="24" r="0.6" fill="#ffffff" opacity="0.5">
+    <animate attributeName="opacity" values="0.4;0.9;0.4" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Modern document with shadow -->
+  <rect x="7" y="5" width="18" height="22" rx="2" fill="url(#paperGrad)" 
+        filter="url(#glow)" stroke="#ffffff" stroke-width="0.5" opacity="0.95"/>
+  
+  <!-- Dynamic header with "R" logo -->
+  <circle cx="12" cy="10" r="3" fill="#ff6b6b" opacity="0.9"/>
+  <text x="12" y="13" text-anchor="middle" fill="white" font-family="Arial, sans-serif" 
+        font-size="4" font-weight="bold">R</text>
+  
+  <!-- Colorful content bars -->
+  <rect x="17" y="8" width="6" height="1.2" rx="0.6" fill="#4ecdc4"/>
+  <rect x="17" y="10.5" width="4" height="1" rx="0.5" fill="#45b7d1"/>
+  
+  <!-- Skills/sections with different colors -->
+  <rect x="9" y="15" width="14" height="1" rx="0.5" fill="#96ceb4" opacity="0.8"/>
+  <rect x="9" y="17" width="12" height="1" rx="0.5" fill="#feca57" opacity="0.8"/>
+  <rect x="9" y="19" width="13" height="1" rx="0.5" fill="#ff9ff3" opacity="0.8"/>
+  
+  <!-- Progress bars -->
+  <rect x="9" y="22" width="10" height="0.8" rx="0.4" fill="#e0e0e0"/>
+  <rect x="9" y="22" width="7" height="0.8" rx="0.4" fill="#4ecdc4"/>
+  
+  <rect x="9" y="24" width="10" height="0.8" rx="0.4" fill="#e0e0e0"/>
+  <rect x="9" y="24" width="8.5" height="0.8" rx="0.4" fill="#ff6b6b"/>
+  
+  <!-- Sparkle effects -->
+  <polygon points="22,6 22.5,7 23.5,7 22.8,7.7 23,8.5 22,8 21,8.5 21.2,7.7 20.5,7 21.5,7" 
+           fill="#ffffff" opacity="0.8">
+    <animateTransform attributeName="transform" type="rotate" 
+                      values="0 22 7;360 22 7" dur="3s" repeatCount="indefinite"/>
+  </polygon>
+  
+  <polygon points="25,20 25.3,20.7 26,20.7 25.5,21.2 25.7,21.8 25,21.4 24.3,21.8 24.5,21.2 24,20.7 24.7,20.7" 
+           fill="#feca57" opacity="0.9">
+    <animateTransform attributeName="transform" type="rotate" 
+                      values="0 25 21;-360 25 21" dur="2.5s" repeatCount="indefinite"/>
+  </polygon>
+</svg>
