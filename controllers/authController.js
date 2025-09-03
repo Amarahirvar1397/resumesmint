@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER || "ahirwaramar685@gmail.com", // Gmail
     pass: process.env.EMAIL_PASS || "your-app-password"  // App password
   },
+  debug: true, // Enable debug logging
   tls: {
     rejectUnauthorized: false
   }
@@ -74,13 +75,14 @@ exports.signup = async (req, res) => {
 
     await user.save();
 
-    // Test email connection first
-    const emailConnectionOk = await testEmailConnection();
-    
-    // Send OTP email
+    // Send OTP email with better error handling
     try {
+      console.log("🔧 Email Config Check:");
+      console.log("EMAIL_USER:", process.env.EMAIL_USER || "ahirwaramar685@gmail.com");
+      console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET" : "NOT SET - USING FALLBACK");
+      
       const mailOptions = {
-        from: `"resumesmint" <${process.env.EMAIL_USER}>`,
+        from: `"resumesmint" <${process.env.EMAIL_USER || "ahirwaramar685@gmail.com"}>`,
         to: email,
         subject: "resumesmint - Email Verification OTP",
         html: `
@@ -101,13 +103,11 @@ exports.signup = async (req, res) => {
         `
       };
 
-      if (!emailConnectionOk) {
-        throw new Error("Email server connection failed");
-      }
-
+      console.log("📧 Attempting to send email to:", email);
       const info = await transporter.sendMail(mailOptions);
-      console.log("📧 OTP email sent successfully to:", email);
+      console.log("✅ OTP email sent successfully!");
       console.log("📧 Message ID:", info.messageId);
+      console.log("📧 Response:", info.response);
       
       return res.status(201).json({ 
         msg: "Signup successful! Please check your email for OTP verification.",
@@ -115,16 +115,23 @@ exports.signup = async (req, res) => {
         emailSent: true
       });
     } catch (emailError) {
-      console.error("❌ Email Error:", emailError.message);
-      console.error("❌ Full Error:", emailError);
+      console.error("❌ Email Error Details:");
+      console.error("Error Code:", emailError.code);
+      console.error("Error Message:", emailError.message);
+      console.error("Error Response:", emailError.response);
+      console.error("Full Error:", emailError);
       
       // Still create user but show OTP in response
       return res.status(201).json({ 
         msg: "Signup successful! Email delivery failed, but here's your OTP:",
         otp: otp,
-        note: "Please save this OTP for verification. Check your email settings.",
+        note: "Please save this OTP for verification. Email Error: " + emailError.message,
         emailSent: false,
-        emailError: emailError.message
+        emailError: emailError.message,
+        debugInfo: {
+          code: emailError.code,
+          response: emailError.response
+        }
       });
     }
   } catch (err) {

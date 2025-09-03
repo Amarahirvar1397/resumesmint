@@ -5,9 +5,14 @@ let templateNum = params.get("template") || "template-01";
 const previewFrame = document.getElementById("previewFrame");
 const form = document.getElementById("resumeForm");
 
+// Keep track of whether user has changed color
+let userHasChangedColor = false;
+let currentTemplateColor = "#2b6cb0"; // Default color
+
 // Iframe load
 previewFrame.src = `./templates/${templateNum}.html`;
 previewFrame.onload = () => {
+  // Don't apply any color changes on load - keep template default
   updatePreview();
 
   // Update preview on input
@@ -126,13 +131,29 @@ document.getElementById("downloadBtn").addEventListener("click", () => {
     head.appendChild(newStyle);
   });
   
-  // ✅ Add custom color override for PDF
+  // ✅ Add custom color override for PDF only if user has changed color
   const colorOverride = document.createElement("style");
-  colorOverride.textContent = `
-    :root { --main-color: ${customColor} !important; }
-    header { background: ${customColor} !important; }
-    h2 { color: ${customColor} !important; border-bottom-color: ${customColor} !important; }
-  `;
+  if (userHasChangedColor) {
+    // Use user's selected color
+    colorOverride.textContent = `
+      :root { --main-color: ${currentTemplateColor} !important; }
+      header { background: ${currentTemplateColor} !important; }
+      h2 { color: ${currentTemplateColor} !important; border-bottom-color: ${currentTemplateColor} !important; }
+      .sidebar { background: ${currentTemplateColor} !important; }
+      .accent-color { color: ${currentTemplateColor} !important; }
+      .border-accent { border-color: ${currentTemplateColor} !important; }
+    `;
+  } else {
+    // Keep template's original default color
+    colorOverride.textContent = `
+      :root { --main-color: #2b6cb0 !important; }
+      header { background: #2b6cb0 !important; }
+      h2 { color: #2b6cb0 !important; border-bottom-color: #2b6cb0 !important; }
+      .sidebar { background: #2b6cb0 !important; }
+      .accent-color { color: #2b6cb0 !important; }
+      .border-accent { border-color: #2b6cb0 !important; }
+    `;
+  }
   head.appendChild(colorOverride);
 
   // ✅ Clone the entire body content properly
@@ -241,12 +262,19 @@ document.getElementById("downloadBtn").addEventListener("click", () => {
 
 
 
-// -------------------- Color Picker --------------------
-const colorPicker = document.getElementById("templateColor");
-colorPicker.addEventListener("input", () => {
+// -------------------- Apply Color to Template Function --------------------
+function applyColorToTemplate(color) {
   const frameDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
   if (!frameDoc) return;
 
-  const color = colorPicker.value;
   frameDoc.documentElement.style.setProperty('--main-color', color);
+  currentTemplateColor = color;
+}
+
+// -------------------- Color Picker --------------------
+const colorPicker = document.getElementById("templateColor");
+colorPicker.addEventListener("input", () => {
+  const color = colorPicker.value;
+  userHasChangedColor = true; // Mark that user has actively changed color
+  applyColorToTemplate(color);
 });
