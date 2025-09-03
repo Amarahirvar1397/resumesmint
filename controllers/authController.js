@@ -8,9 +8,15 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret"; // 🔑 .env म
 // ===== Nodemailer Transporter =====
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER, // Gmail
-    pass: process.env.EMAIL_PASS  // App password
+    user: process.env.EMAIL_USER || "ahirwaramar685@gmail.com", // Gmail
+    pass: process.env.EMAIL_PASS || "your-app-password"  // App password
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
