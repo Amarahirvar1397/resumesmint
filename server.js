@@ -8,6 +8,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const MongoStore = require("connect-mongo");
 
 // ===== Import Routes =====
 const authRoutes = require("./routes/auth");
