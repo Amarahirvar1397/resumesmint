@@ -110,7 +110,9 @@ document.getElementById("downloadBtn").addEventListener("click", () => {
   wrapperHTML.appendChild(head);
   wrapperHTML.appendChild(body);
 
-  // ✅ Copy all CSS from iframe
+  // ✅ Copy all CSS from iframe and apply custom color
+  const customColor = document.getElementById("templateColor").value;
+  
   frameDoc.querySelectorAll("link[rel='stylesheet'], style").forEach(styleEl => {
     let newStyle;
     if (styleEl.tagName.toLowerCase() === "link") {
@@ -123,6 +125,15 @@ document.getElementById("downloadBtn").addEventListener("click", () => {
     }
     head.appendChild(newStyle);
   });
+  
+  // ✅ Add custom color override for PDF
+  const colorOverride = document.createElement("style");
+  colorOverride.textContent = `
+    :root { --main-color: ${customColor} !important; }
+    header { background: ${customColor} !important; }
+    h2 { color: ${customColor} !important; border-bottom-color: ${customColor} !important; }
+  `;
+  head.appendChild(colorOverride);
 
   // ✅ Clone the entire body content properly
   const clonedContent = frameBody.cloneNode(true);
