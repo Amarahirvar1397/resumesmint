@@ -25,6 +25,18 @@ function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+// ===== Test email connection =====
+async function testEmailConnection() {
+  try {
+    await transporter.verify();
+    console.log("✅ Email server connection verified");
+    return true;
+  } catch (error) {
+    console.error("❌ Email server connection failed:", error);
+    return false;
+  }
+}
+
 // ====================== SIGNUP ======================
 exports.signup = async (req, res) => {
   try {
@@ -62,39 +74,57 @@ exports.signup = async (req, res) => {
 
     await user.save();
 
+    // Test email connection first
+    const emailConnectionOk = await testEmailConnection();
+    
     // Send OTP email
     try {
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `"resumesmint" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "resumesmint - Email Verification OTP",
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #333;">🎯 Welcome to resumesmint!</h2>
-            <p>Your email verification OTP is:</p>
-            <h1 style="color: #007bff; font-size: 48px; text-align: center; margin: 20px 0;">${otp}</h1>
-            <p><strong>This OTP will expire in 5 minutes.</strong></p>
-            <p>If you didn't request this, please ignore this email.</p>
-            <hr>
-            <p style="color: #666; font-size: 12px;">resumesmint - Create Professional Resumes</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+            <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+              <h2 style="color: #333; text-align: center; margin-bottom: 20px;">🎯 Welcome to resumesmint!</h2>
+              <p style="color: #666; font-size: 16px;">Thank you for signing up! To complete your registration, please verify your email address.</p>
+              <p style="color: #666; font-size: 16px;">Your email verification OTP is:</p>
+              <div style="text-align: center; margin: 30px 0;">
+                <span style="display: inline-block; background-color: #007bff; color: white; font-size: 32px; font-weight: bold; padding: 15px 30px; border-radius: 8px; letter-spacing: 3px;">${otp}</span>
+              </div>
+              <p style="color: #dc3545; font-weight: bold; text-align: center;">⏰ This OTP will expire in 5 minutes.</p>
+              <p style="color: #666; font-size: 14px; margin-top: 30px;">If you didn't request this verification, please ignore this email.</p>
+              <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+              <p style="color: #999; font-size: 12px; text-align: center;">resumesmint - Create Professional Resumes</p>
+            </div>
           </div>
         `
       };
 
-      await transporter.sendMail(mailOptions);
+      if (!emailConnectionOk) {
+        throw new Error("Email server connection failed");
+      }
+
+      const info = await transporter.sendMail(mailOptions);
       console.log("📧 OTP email sent successfully to:", email);
+      console.log("📧 Message ID:", info.messageId);
       
       return res.status(201).json({ 
         msg: "Signup successful! Please check your email for OTP verification.",
-        note: "OTP sent to your email address"
+        note: "OTP sent to your email address",
+        emailSent: true
       });
     } catch (emailError) {
-      console.error("❌ Email Error:", emailError);
+      console.error("❌ Email Error:", emailError.message);
+      console.error("❌ Full Error:", emailError);
+      
       // Still create user but show OTP in response
       return res.status(201).json({ 
         msg: "Signup successful! Email delivery failed, but here's your OTP:",
         otp: otp,
-        note: "Please save this OTP for verification"
+        note: "Please save this OTP for verification. Check your email settings.",
+        emailSent: false,
+        emailError: emailError.message
       });
     }
   } catch (err) {
@@ -114,9 +144,10 @@ exports.verifyOtp = async (req, res) => {
       return res.status(400).json({ msg: "Invalid or expired OTP" });
     }
 
-    // clear OTP
+    // clear OTP and mark as verified
     user.otp = null;
     user.otpExpiry = null;
+    user.isVerified = true;
     await user.save();
 
     // Generate JWT token for automatic login
@@ -156,6 +187,14 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) return res.status(400).json({ msg: "User not found" });
+    
+    // Check if user is verified
+    if (!user.isVerified) {
+      return res.status(400).json({ 
+        msg: "Please verify your email first before logging in",
+        needsVerification: true 
+      });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
