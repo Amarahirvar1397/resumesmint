@@ -2,12 +2,11 @@
 const express = require("express");
 const router = express.Router();
 const resumeController = require("../controllers/resumeController");
-const authMiddleware = require("../middleware/authMiddleware"); // ✅ JWT middleware import
 
-// Save resume data (🔒 protected)
-router.post("/save", authMiddleware, resumeController.saveResume);
+// Save resume data (now public)
+router.post("/save", resumeController.saveResume);
 
-// Export resume (PDF/HTML) (🔒 protected)
-router.get("/export/:id", authMiddleware, resumeController.exportResume);
+// Export resume (PDF/HTML) (now public)
+router.get("/export/:id", resumeController.exportResume);
 
 module.exports = router;
