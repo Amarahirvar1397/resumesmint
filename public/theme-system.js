@@ -1,4 +1,4 @@
-// Simple theme toggle system
+  // Simple theme toggle system
 function toggleTheme() {
   const body = document.body;
   const isDark = body.classList.contains('dark-mode');
