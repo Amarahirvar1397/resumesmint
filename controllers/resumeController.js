@@ -5,13 +5,13 @@ let resumes = [];
 
 exports.saveResume = (req, res) => {
   try {
-    const { userId, details } = req.body;
+    const { details } = req.body;
 
-    if (!userId || !details) {
-      return res.status(400).json({ error: "User ID and details are required" });
+    if (!details) {
+      return res.status(400).json({ error: "Resume details are required" });
     }
 
-    const resume = { id: resumes.length + 1, userId, details };
+    const resume = { id: resumes.length + 1, details };
     resumes.push(resume);
 
     res.status(201).json({ message: "Resume saved successfully", resume });
