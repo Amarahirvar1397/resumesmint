@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Applications - resumesmint</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Theme System - Load immediately to prevent flash -->
+  <script src="theme-system.js"></script>
+  <style>
+    /* Reset & base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #111827;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      max-width: 100%;
+      width: 100%;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .header-content {
+      text-align: left;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .theme-btn {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+    }
+    
+    .theme-btn:hover {
+      background: #e5e7eb;
+    }
+    
+    .home-btn {
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    .home-btn:hover {
+      background: #1e40af;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 2.75rem;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+    header p {
+      font-weight: 500;
+      color: #4b5563;
+      font-size: 1.125rem;
+    }
+    main {
+      width: 100%;
+      max-width: 1000px;
+    }
+    
+    /* Application list */
+    #applications-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    #applications-list li {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: box-shadow 0.2s ease;
+    }
+    
+    #applications-list li:hover {
+      box-shadow: 0 6px 12px rgb(0 0 0 / 0.1);
+    }
+    
+    .application-info {
+      flex-grow: 1;
+    }
+    
+    .application-info h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.25rem;
+      color: #1e40af;
+    }
+    
+    .application-info h3 a {
+      color: #1e40af;
+      text-decoration: none;
+    }
+    
+    .application-info h3 a:hover {
+      text-decoration: underline;
+    }
+    
+    .application-info .company {
+      color: #6b7280;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+    
+    .application-info .details {
+      display: flex;
+      gap: 16px;
+      color: #4b5563;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+    }
+    
+    .application-info .details span {
+      background: #f3f4f6;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    
+    .application-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+    
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-applied {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    
+    .status-under-review {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    .status-interview {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    .status-offer {
+      background: #dcfce7;
+      color: #166534;
+    }
+    
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    .status-withdrawn {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+    
+    .delete-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    
+    .delete-btn:hover {
+      background: #dc2626;
+    }
+    
+    /* Loading, no result, error */
+    .loading,
+    .no-applications,
+    .error {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      color: #6b7280;
+      font-style: italic;
+      text-align: center;
+      cursor: default;
+      padding: 40px 0;
+      font-size: 1.1rem;
+    }
+    
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background-color: #111827;
+      color: #f9fafb;
+    }
+    
+    body.dark-mode header {
+      background: #1f2937;
+      color: #f9fafb;
+    }
+    
+    body.dark-mode .theme-btn {
+      background: #374151;
+      border-color: #4b5563;
+      color: #f9fafb;
+    }
+    
+    body.dark-mode .theme-btn:hover {
+      background: #4b5563;
+    }
+    
+    body.dark-mode #applications-list li {
+      background: #1f2937;
+      border-color: #374151;
+      color: #f9fafb;
+    }
+    
+    body.dark-mode .application-info h3 a {
+      color: #60a5fa;
+    }
+    
+    body.dark-mode .application-info .company {
+      color: #9ca3af;
+    }
+    
+    body.dark-mode .application-info .details {
+      color: #d1d5db;
+    }
+    
+    body.dark-mode .application-info .details span {
+      background: #374151;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>My Applications</h1>
+      <p>Track your job applications</p>
+    </div>
+    <div class="header-actions">
+      <a href="jobs.html" class="home-btn">🔍 Find Jobs</a>
+      <button id="theme-toggle" class="theme-btn">🌙</button>
+      <a href="index.html" class="home-btn">🏠 Home</a>
+    </div>
+  </header>
+  
+  <main>
+    <ul id="applications-list">
+      <li class="loading">Loading your applications...</li>
+    </ul>
+  </main>
+  
+  <script src="applications.js"></script>
+</body>
+</html>

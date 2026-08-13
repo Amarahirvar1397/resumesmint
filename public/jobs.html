@@ -179,6 +179,13 @@
     #job-results li button.apply-btn:hover {
       background-color: #1e40af;
     }
+    #job-results li button.apply-btn.applied {
+      background-color: #10b981;
+      cursor: not-allowed;
+    }
+    #job-results li button.apply-btn.applied:hover {
+      background-color: #10b981;
+    }
     /* Loading, no result, error */
     #job-results li.loading,
     #job-results li.no-results,
@@ -285,6 +292,7 @@ body.dark-mode #job-form select:focus {
       <p>Search jobs based on your skills and experience</p>
     </div>
     <div class="header-actions">
+      <a href="applications.html" class="home-btn">📋 My Applications</a>
       <button id="theme-toggle" class="theme-btn">🌙</button>
       <a href="index.html" class="home-btn">🏠 Home</a>
     </div>

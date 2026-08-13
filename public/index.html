@@ -23,10 +23,13 @@
       <nav class="nav">
         <a href="create.html">Create Resume</a>
         <a href="jobs.html">Find Jobs</a>
+        <a href="applications.html">My Applications</a>
         <a href="interview.html">AI Interview</a>
       </nav>
+      
 
       <div class="header-actions">
+        <button id="logoutBtn" type="button">Logout</button>
         <!-- Theme toggle -->
         <button id="theme-toggle" class="theme-btn">🌙</button>
       </div>
@@ -37,6 +40,19 @@
       <h1>Create Your <span>Professional Resume</span> in Minutes</h1>
       <p>Choose a template, fill your details, and get your job-ready resume instantly.</p>
       <a href="create.html" class="cta-btn">Start Building →</a>
+    </section>
+
+    <!-- ========== APPLICATION STATS SECTION ========== -->
+    <section class="hero" style="background: linear-gradient(135deg, #667eea, #764ba2); margin-top: 2rem;">
+      <h1>Your <span>Job Applications</span></h1>
+      <p>Track your job application progress and status</p>
+      <div id="application-stats" style="margin-top: 1.5rem; display: flex; gap: 2rem; justify-content: center;">
+        <div style="text-align: center;">
+          <div id="application-count" style="font-size: 3rem; font-weight: 700; color: white;">-</div>
+          <div style="color: rgba(255,255,255,0.9); font-size: 1.1rem;">Applications Submitted</div>
+        </div>
+      </div>
+      <a href="applications.html" class="cta-btn" style="margin-top: 1.5rem;">View Applications →</a>
     </section>
 
     <!-- ========== TEMPLATE PREVIEW SCROLLER ========== -->

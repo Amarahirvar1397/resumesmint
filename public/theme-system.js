@@ -23,15 +23,21 @@ function toggleTheme() {
 // Apply saved theme on page load
 function applySavedTheme() {
   const savedTheme = localStorage.getItem('theme');
+
+  if (!document.body) {
+    return;
+  }
+
   if (savedTheme === 'dark') {
     document.body.classList.add('dark-mode');
     document.documentElement.classList.add('dark-mode');
   }
-  
-  // Update button icon
+
   const toggleBtn = document.getElementById('theme-toggle');
+
   if (toggleBtn) {
-    toggleBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    toggleBtn.textContent =
+      document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
   }
 }
 
@@ -46,4 +52,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Apply theme immediately to prevent flash
-applySavedTheme();
+document.addEventListener('DOMContentLoaded', applySavedTheme);
