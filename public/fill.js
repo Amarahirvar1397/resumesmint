@@ -9,6 +9,10 @@ const form = document.getElementById("resumeForm");
 let userHasChangedColor = false;
 let currentTemplateColor = "#2b6cb0"; // Default color
 
+// Job fetching variables
+let jobFetchTimeout = null;
+const JOB_FETCH_DELAY = 800; // milliseconds to debounce
+
 // Iframe load
 previewFrame.src = `./templates/${templateNum}.html`;
 previewFrame.onload = () => {
@@ -18,6 +22,12 @@ previewFrame.onload = () => {
   // Update preview on input
   form.addEventListener("input", updatePreview);
   document.getElementById("photo").addEventListener("change", updatePreview);
+
+  // Add skill change listener for job fetching
+  const skillsInput = document.getElementById("skills");
+  if (skillsInput) {
+    skillsInput.addEventListener("input", handleSkillsChange);
+  }
 };
 
 // -------------------- Update Preview Function --------------------
@@ -278,3 +288,159 @@ colorPicker.addEventListener("input", () => {
   userHasChangedColor = true; // Mark that user has actively changed color
   applyColorToTemplate(color);
 });
+
+// -------------------- Job Fetching Functions --------------------
+
+// Debounced skill change handler
+function handleSkillsChange() {
+  const skillsInput = document.getElementById("skills");
+  const skills = skillsInput.value.trim();
+
+  // Clear previous timeout
+  if (jobFetchTimeout) {
+    clearTimeout(jobFetchTimeout);
+  }
+
+  // Don't fetch if skills are empty
+  if (!skills) {
+    showJobsMessage("Add your skills to see relevant jobs.");
+    return;
+  }
+
+  // Set new timeout for debounced fetch
+  jobFetchTimeout = setTimeout(() => {
+    fetchJobsForSkills(skills);
+  }, JOB_FETCH_DELAY);
+}
+
+// Fetch jobs based on skills
+async function fetchJobsForSkills(skills) {
+  const jobsContent = document.getElementById("jobs-content");
+  
+  // Show loading state
+  jobsContent.innerHTML = '<div class="jobs-loading">Finding jobs for you...</div>';
+
+  try {
+    // Reuse existing job search API
+    const response = await fetch(`/api/jobs?skills=${encodeURIComponent(skills)}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch jobs");
+    }
+
+    const jobs = data.jobs || [];
+
+    if (jobs.length === 0) {
+      showJobsMessage("No matching jobs found. Try adding more skills.");
+      return;
+    }
+
+    // Display jobs
+    displayJobs(jobs);
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    jobsContent.innerHTML = `
+      <div class="jobs-error">
+        Failed to load jobs. Please try again later.
+      </div>
+    `;
+  }
+}
+
+// Display jobs in the jobs section
+function displayJobs(jobs) {
+  const jobsContent = document.getElementById("jobs-content");
+  
+  // Limit to 5 jobs to avoid overwhelming the UI
+  const jobsToShow = jobs.slice(0, 5);
+  
+  const jobsHTML = jobsToShow.map(job => `
+    <div class="job-card">
+      <div class="job-title">${escapeHtml(job.title)}</div>
+      <div class="job-company">${escapeHtml(job.company || 'Unknown Company')}</div>
+      <div class="job-location">${escapeHtml(job.location || 'Remote')}</div>
+      ${job.skills && job.skills.length > 0 ? `
+        <div class="job-skills">
+          ${job.skills.slice(0, 4).map(skill => `
+            <span class="job-skill-tag">${escapeHtml(skill)}</span>
+          `).join('')}
+        </div>
+      ` : ''}
+      <button class="job-view-btn" onclick="applyToJobFromResume('${encodeURIComponent(JSON.stringify(job))}', this)">
+        Apply Job
+      </button>
+    </div>
+  `).join('');
+
+  jobsContent.innerHTML = jobsHTML;
+}
+
+// Show a message in the jobs section
+function showJobsMessage(message) {
+  const jobsContent = document.getElementById("jobs-content");
+  jobsContent.innerHTML = `<div class="jobs-message">${message}</div>`;
+}
+
+// Helper function to escape HTML to prevent XSS
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Function to apply to a job from resume builder
+async function applyToJobFromResume(jobString, button) {
+  try {
+    const job = JSON.parse(decodeURIComponent(jobString));
+    
+    // Disable button and show loading
+    button.disabled = true;
+    button.textContent = 'Applying...';
+    
+    // Create application
+    const response = await fetch('/api/applications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        jobId: job.applyUrl,
+        jobTitle: job.title,
+        company: job.company,
+        location: job.location,
+        jobType: job.jobType,
+        salary: job.salary,
+        applyUrl: job.applyUrl
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Success - update button
+      button.textContent = 'Applied';
+      button.classList.add('applied');
+      button.style.background = '#10b981';
+      
+      // Show success message
+      alert('Application saved successfully! You can view it in My Applications section.');
+      
+      // Redirect to job application page after a short delay
+      setTimeout(() => {
+        window.open(job.applyUrl, '_blank');
+      }, 1000);
+    } else {
+      // Error - restore button
+      button.disabled = false;
+      button.textContent = 'Apply Job';
+      alert(data.message || 'Failed to apply. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error applying to job:', error);
+    button.disabled = false;
+    button.textContent = 'Apply Job';
+    alert('Failed to apply. Please try again.');
+  }
+}
