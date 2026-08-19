@@ -200,7 +200,7 @@ function requireAuth(req, res, next) {
 }
 
 app.use((req, res, next) => {
-  if (req.path === "/" || req.path === "/index.html") {
+  if (req.path === "/" || req.path === "/index.html" || req.path === "/fill.html") {
     return next();
   }
 
@@ -213,6 +213,10 @@ app.get("/", requireAuth, (req, res) => {
 
 app.get("/index.html", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/fill.html", requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "fill.html"));
 });
 
 // ===== Default route (homepage) =====

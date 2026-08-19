@@ -78,15 +78,16 @@
       flex-direction: row;
       gap: 20px;
       padding: 20px;
+      height: calc(100vh - 140px);
     }
 
     .form-section {
-      flex: 1;
-      max-width: 40%;
+      flex: 0 0 35%;
       background: #f7f7f7;
       padding: 20px;
       border-radius: 10px;
       overflow-y: auto;
+      height: 100%;
     }
 
     .form-section h2 {
@@ -120,13 +121,16 @@
     }
 
     .preview-section {
-      flex: 2;
+      flex: 0 0 35%;
       background: white;
       border: 1px solid #ddd;
       border-radius: 10px;
-      overflow: auto;
-      padding: 10px;
+      overflow: hidden;
+      padding: 0;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     .preview-header {
@@ -134,9 +138,15 @@
       padding: 10px 15px;
       border-bottom: 1px solid #ddd;
       border-radius: 10px 10px 0 0;
-      margin: -10px -10px 10px -10px;
       font-weight: bold;
       color: #2b6cb0;
+      flex-shrink: 0;
+    }
+
+    .iframe-container {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
     }
 
     iframe {
@@ -144,15 +154,184 @@
       height: 100%;
       border: none;
       background: white;
-      min-height: 600px;
+      display: block;
+    }
+
+    .right-column {
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .jobs-section {
+      background: #f7f7f7;
+      padding: 20px;
+      border-radius: 10px;
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .jobs-header {
+      background: #f8f9fa;
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+      border-radius: 10px 10px 0 0;
+      margin: -20px -20px 15px -20px;
+      font-weight: bold;
+      color: #2b6cb0;
+    }
+
+    .jobs-message {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    .job-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: box-shadow 0.2s;
+    }
+
+    .job-card:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .job-title {
+      font-weight: bold;
+      color: #2b6cb0;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .job-company {
+      color: #666;
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+    }
+
+    .job-location {
+      color: #888;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .job-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .job-skill-tag {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    .job-view-btn {
+      background: #2b6cb0;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    .job-view-btn:hover {
+      background: #1e4a73;
+    }
+
+    .job-view-btn.applied {
+      background: #10b981;
+      cursor: not-allowed;
+    }
+
+    .job-view-btn.applied:hover {
+      background: #10b981;
+    }
+
+    .jobs-loading {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
+
+    .jobs-error {
+      text-align: center;
+      color: #d32f2f;
+      padding: 20px;
+    }
+
+    body.dark-mode .jobs-section {
+      background: #374151;
+      color: #f9fafb;
+    }
+
+    body.dark-mode .jobs-header {
+      background: #1f2937;
+      color: #60a5fa;
+      border-color: #4b5563;
+    }
+
+    body.dark-mode .job-card {
+      background: #1f2937;
+      border-color: #4b5563;
+      color: #f9fafb;
+    }
+
+    body.dark-mode .job-title {
+      color: #60a5fa;
+    }
+
+    body.dark-mode .job-company {
+      color: #9ca3af;
+    }
+
+    body.dark-mode .job-location {
+      color: #6b7280;
+    }
+
+    body.dark-mode .job-skill-tag {
+      background: #1e3a8a;
+      color: #93c5fd;
+    }
+
+    body.dark-mode .job-view-btn {
+      background: #2563eb;
+    }
+
+    body.dark-mode .job-view-btn:hover {
+      background: #1d4ed8;
+    }
+
+    body.dark-mode .job-view-btn.applied {
+      background: #10b981;
+    }
+
+    body.dark-mode .job-view-btn.applied:hover {
+      background: #10b981;
     }
 
     .controls-section {
       background: #f7f7f7;
       padding: 15px;
       border-radius: 10px;
-      margin-top: 20px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     .controls-section label {
@@ -214,10 +393,13 @@
         flex-direction: column;
         padding: 15px;
         gap: 15px;
+        height: auto;
       }
 
       .form-section {
-        max-width: 100%;
+        flex: none;
+        width: 100%;
+        max-height: 400px;
         order: 1;
       }
 
@@ -232,8 +414,26 @@
       }
 
       .preview-section {
+        flex: none;
+        width: 100%;
+        height: 400px;
         order: 2;
-        min-height: 400px;
+      }
+
+      .iframe-container {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .right-column {
+        flex: none;
+        width: 100%;
+        order: 3;
+      }
+
+      .jobs-section {
+        max-height: 300px;
       }
 
       .preview-header {
@@ -243,11 +443,7 @@
 
       iframe {
         min-height: 400px;
-      }
-
-      .controls-section {
-        order: 3;
-        margin-top: 0;
+        display: block;
       }
 
       .form-section input,
@@ -273,8 +469,13 @@
 
       .form-section,
       .preview-section,
-      .controls-section {
+      .controls-section,
+      .jobs-section {
         padding: 15px;
+      }
+
+      .jobs-section {
+        max-height: 250px;
       }
 
       .form-section h2 {
@@ -284,6 +485,7 @@
 
       iframe {
         min-height: 350px;
+        display: block;
       }
 
       #downloadBtn {
@@ -377,16 +579,29 @@
     <!-- Right Preview -->
     <div class="preview-section">
       <div class="preview-header">📄 Live Preview</div>
-      <!-- Resume Preview Iframe -->
-      <iframe id="previewFrame" src="templates/template-01.html"></iframe>
+      <div class="iframe-container">
+        <!-- Resume Preview Iframe -->
+        <iframe id="previewFrame" src="templates/template-01.html"></iframe>
+      </div>
     </div>
 
-    <!-- Controls Section -->
-    <div class="controls-section">
-      <label>Choose Template Color</label>
-      <input type="color" id="templateColor" value="#2b6cb0" />
-      
-      <button id="downloadBtn">📥 Download as PDF</button>
+    <!-- Right Column with Jobs and Controls -->
+    <div class="right-column">
+      <!-- Jobs For You Section -->
+      <div class="jobs-section">
+        <div class="jobs-header">💼 Jobs For You</div>
+        <div id="jobs-content">
+          <div class="jobs-message">Add your skills to see relevant jobs.</div>
+        </div>
+      </div>
+
+      <!-- Controls Section -->
+      <div class="controls-section">
+        <label>Choose Template Color</label>
+        <input type="color" id="templateColor" value="#2b6cb0" />
+        
+        <button id="downloadBtn">📥 Download as PDF</button>
+      </div>
     </div>
 
 
