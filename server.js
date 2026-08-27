@@ -1,6 +1,13 @@
 require("dns").setServers(["8.8.8.8", "1.1.1.1"]);
 require("dotenv").config();
 
+const { GoogleGenAI } = require("@google/genai");
+
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
+
+
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
@@ -16,6 +23,8 @@ const authRoutes = require("./routes/auth");
 const resumeRoutes = require("./routes/resume");
 const jobsRoutes = require("./routes/jobs");
 const applicationRoutes = require("./routes/applications");
+const aiJobsRoutes = require("./routes/aiJobs");
+
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -90,7 +99,8 @@ app.use((req, res, next) => {
 // ===== Routes =====
 app.use("/auth", authRoutes);              // Signup/Login/OTP
 app.use("/api/resume", resumeRoutes);      // Resume CRUD
-app.use("/api/jobs", jobsRoutes);          // Jobs API
+app.use("/api/jobs", jobsRoutes);
+app.use("/api/ai-jobs", aiJobsRoutes);          // Jobs API
 app.use("/api/applications", applicationRoutes); // Job Applications
 app.post("/api/seed-jobs", async (req, res) => {
   try {
