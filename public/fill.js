@@ -13,6 +13,12 @@ let currentTemplateColor = "#2b6cb0"; // Default color
 let jobFetchTimeout = null;
 const JOB_FETCH_DELAY = 800; // milliseconds to debounce
 
+// AI job recommendation variables
+let aiJobFetchTimeout = null;
+let lastAIProfile = "";
+const AI_JOB_DELAY = 2500;
+let aiRequestId = 0;
+
 // Iframe load
 previewFrame.src = `./templates/${templateNum}.html`;
 previewFrame.onload = () => {
@@ -22,12 +28,11 @@ previewFrame.onload = () => {
   // Update preview on input
   form.addEventListener("input", updatePreview);
   document.getElementById("photo").addEventListener("change", updatePreview);
+  // Automatically update AI job recommendations
+form.addEventListener("input", scheduleAIJobRecommendations);
 
   // Add skill change listener for job fetching
-  const skillsInput = document.getElementById("skills");
-  if (skillsInput) {
-    skillsInput.addEventListener("input", handleSkillsChange);
-  }
+ 
 };
 
 // -------------------- Update Preview Function --------------------
@@ -290,6 +295,101 @@ colorPicker.addEventListener("input", () => {
 });
 
 // -------------------- Job Fetching Functions --------------------
+// ========================================
+// AI JOB RECOMMENDATIONS
+// ========================================
+
+function scheduleAIJobRecommendations() {
+  if (aiJobFetchTimeout) {
+    clearTimeout(aiJobFetchTimeout);
+  }
+
+  aiJobFetchTimeout = setTimeout(() => {
+    fetchAIJobRecommendations();
+  }, AI_JOB_DELAY);
+}
+
+async function fetchAIJobRecommendations() {
+  const name = document.getElementById("name")?.value.trim() || "";
+  const skills = document.getElementById("skills")?.value.trim() || "";
+  const education = document.getElementById("education")?.value.trim() || "";
+  const experience = document.getElementById("experience")?.value.trim() || "";
+  const summary = document.getElementById("summary")?.value.trim() || "";
+
+  if (!skills && !experience && !education && !summary) {
+    return;
+  }
+
+  const profileKey = JSON.stringify({
+    name,
+    skills,
+    education,
+    experience,
+    summary
+  });
+
+  if (profileKey === lastAIProfile) {
+    return;
+  }
+
+  lastAIProfile = profileKey;
+  const currentRequestId = ++aiRequestId;
+
+  const jobsContent = document.getElementById("jobs-content");
+
+  if (jobsContent) {
+    jobsContent.innerHTML =
+      '<div class="jobs-loading">AI is finding the best jobs for you...</div>';
+  }
+
+  try {
+    const response = await fetch("/api/ai-jobs/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        skills,
+        education,
+        experience,
+        summary
+      })
+    });
+
+    const data = await response.json();
+
+    if (currentRequestId !== aiRequestId) {
+  return;
+}
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message || "Failed to generate AI job recommendations"
+      );
+    }
+
+    const jobs = data.jobs || [];
+
+    if (jobs.length === 0) {
+      showJobsMessage("No suitable jobs found right now.");
+      return;
+    }
+
+    displayJobs(jobs);
+
+  } catch (error) {
+    console.error("❌ AI job recommendation error:", error);
+
+    if (jobsContent) {
+      jobsContent.innerHTML = `
+        <div class="jobs-error">
+          Unable to load AI job recommendations. Please try again.
+        </div>
+      `;
+    }
+  }
+}
 
 // Debounced skill change handler
 function handleSkillsChange() {
@@ -351,27 +451,57 @@ async function fetchJobsForSkills(skills) {
 // Display jobs in the jobs section
 function displayJobs(jobs) {
   const jobsContent = document.getElementById("jobs-content");
-  
-  // Limit to 5 jobs to avoid overwhelming the UI
+
+  // Limit to 5 AI-ranked jobs
   const jobsToShow = jobs.slice(0, 5);
-  
+
   const jobsHTML = jobsToShow.map(job => `
     <div class="job-card">
-      <div class="job-title">${escapeHtml(job.title)}</div>
-      <div class="job-company">${escapeHtml(job.company || 'Unknown Company')}</div>
-      <div class="job-location">${escapeHtml(job.location || 'Remote')}</div>
-      ${job.skills && job.skills.length > 0 ? `
-        <div class="job-skills">
-          ${job.skills.slice(0, 4).map(skill => `
-            <span class="job-skill-tag">${escapeHtml(skill)}</span>
-          `).join('')}
-        </div>
-      ` : ''}
-      <button class="job-view-btn" onclick="applyToJobFromResume('${encodeURIComponent(JSON.stringify(job))}', this)">
+
+      <div class="job-title">
+        ${escapeHtml(job.title)}
+      </div>
+
+      <div class="job-company">
+        ${escapeHtml(job.company || "Unknown Company")}
+      </div>
+
+      <div class="job-location">
+        ${escapeHtml(job.location || "Remote")}
+      </div>
+
+      <div class="ai-match">
+        <strong>${job.matchPercentage || 0}% Match</strong>
+        <span>
+          ${escapeHtml(
+            job.matchReason || "Good match based on your resume."
+          )}
+        </span>
+      </div>
+
+      ${
+        job.skills && job.skills.length > 0
+          ? `
+            <div class="job-skills">
+              ${job.skills.slice(0, 4).map(skill => `
+                <span class="job-skill-tag">
+                  ${escapeHtml(skill)}
+                </span>
+              `).join("")}
+            </div>
+          `
+          : ""
+      }
+
+      <button
+        class="job-view-btn"
+        onclick="applyToJobFromResume('${encodeURIComponent(JSON.stringify(job))}', this)"
+      >
         Apply Job
       </button>
+
     </div>
-  `).join('');
+  `).join("");
 
   jobsContent.innerHTML = jobsHTML;
 }
